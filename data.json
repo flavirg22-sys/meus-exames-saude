@@ -1,32 +1,48 @@
 {
-  "history": [
+  "pesoAtual": 58.5,
+  "metaPeso": 53,
+  "historico": [
     {
-      "date": "2016-06",
-      "weight": 73.4,
+      "data": "2016-06",
+      "peso": 73.4,
       "ldl": 150,
-      "total": 215
+      "hdl": 43,
+      "total": 215,
+      "glicose": 99,
+      "hba1c": 5.1
     },
     {
-      "date": "2017-07",
+      "data": "2017-07",
+      "peso": null,
       "ldl": 136,
-      "total": 199
+      "hdl": 40,
+      "total": 199,
+      "glicose": 97,
+      "hba1c": 5.2
     },
     {
-      "date": "2019-08",
+      "data": "2019-08",
+      "peso": null,
       "ldl": 154,
+      "hdl": 45,
       "total": 221
     },
     {
-      "date": "2023",
-      "weight": 78
+      "data": "2023",
+      "peso": 78
     },
     {
-      "date": "2026-01",
-      "weight": 74
+      "data": "2026-01",
+      "peso": 74
     },
     {
-      "date": "2026-08",
-      "weight": 58.5
+      "data": "2026-08",
+      "peso": 58.5,
+      "ldl": 111,
+      "hdl": 62,
+      "total": 187,
+      "glicose": 87,
+      "hba1c": 5.1
     }
   ]
 }

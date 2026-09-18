@@ -1,9 +1,1 @@
-{
-  "name": "Minha Saúde",
-  "short_name": "Saúde",
-  "start_url": "./",
-  "display": "standalone",
-  "background_color": "#246b63",
-  "theme_color": "#246b63",
-  "icons": []
-}
+{"name":"Minha Saúde","short_name":"Saúde","start_url":"./","display":"standalone"}

@@ -1,25 +1,16 @@
-<!doctype html><html lang='pt-BR'><head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width,initial-scale=1'>
-<title>Minha Saúde</title>
-<link rel='manifest' href='manifest.json'>
-<style>
-body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#f4f4f4;margin:0}
-header{background:#246b63;color:#fff;padding:24px}
-.card{background:#fff;margin:16px;border-radius:18px;padding:18px}
-table{width:100%;border-collapse:collapse}td,th{padding:8px;border-bottom:1px solid #eee;text-align:left}
-button{background:#246b63;color:#fff;border:0;border-radius:10px;padding:10px 14px}
-input{width:100%;padding:10px;margin:6px 0}
-</style></head><body>
-<header><h1>Minha Saúde</h1><p>Histórico de exames • Flávia</p></header>
-<div class='card'><h2>Resumo</h2><p><b>Peso atual:</b> 58,5 kg • <b>Meta:</b> 53 kg</p></div>
-<div class='card'><h2>Linha do tempo</h2><table id=t></table></div>
-<div class='card'><h2>Novo registro</h2>
-<input id=d placeholder='AAAA-MM'><input id=p type=number placeholder='Peso'>
-<input id=l type=number placeholder='LDL'><input id=c type=number placeholder='Colesterol Total'>
-<button onclick='add()'>Salvar</button></div>
+<!doctype html><html lang='pt-br'><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>Minha Saúde</title><link rel='manifest' href='manifest.json'><style>
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#efefef;margin:0}
+header{background:#1f766e;color:#fff;padding:28px} .card{background:#fff;margin:18px;border-radius:18px;padding:18px}
+table{width:100%;border-collapse:collapse}th,td{padding:8px;border-bottom:1px solid #ddd;text-align:left}
+input{width:100%;padding:12px;margin:6px 0;border:1px solid #ccc;border-radius:10px}
+button{background:#1f766e;color:#fff;border:none;padding:12px 18px;border-radius:12px}
+</style><body><header><h1>Minha Saúde</h1><p>Histórico de exames • Flávia</p></header>
+<div class='card'><h2>Resumo</h2><p>Peso atual: <b id=p></b> kg • Meta: <b id=m></b> kg</p></div>
+<div class='card'><h2>Linha do tempo</h2><table><thead><tr><th>Data</th><th>Peso</th><th>LDL</th><th>HDL</th><th>Total</th><th>Glicose</th><th>HbA1c</th></tr></thead><tbody id=t></tbody></table></div>
+<div class='card'><h2>Novo registro</h2><input id=d placeholder='AAAA-MM'><input id=w placeholder='Peso'><input id=l placeholder='LDL'><input id=h placeholder='HDL'><input id=tc placeholder='Total'><input id=g placeholder='Glicose'><input id=a placeholder='HbA1c'><button onclick='add()'>Salvar</button></div>
 <script>
-let data=[{d:"2016-06",p:73.4,l:150,c:215},{d:"2017-07",p:null,l:136,c:199},{d:"2019-08",p:null,l:154,c:221},{d:"2023",p:78,l:null,c:null},{d:"2026-01",p:74,l:null,c:null},{d:"2026-08",p:58.5,l:null,c:null}];
-function render(){let h="<tr><th>Data</th><th>Peso</th><th>LDL</th><th>Total</th></tr>";data.forEach(r=>h+=`<tr><td>${r.d}</td><td>${r.p??"-"}</td><td>${r.l??"-"}</td><td>${r.c??"-"}</td></tr>`);t.innerHTML=h;}
-function add(){data.push({d:d.value,p:p.value?+p.value:null,l:l.value?+l.value:null,c:c.value?+c.value:null});render();d.value=p.value=l.value=c.value="";}
-render();if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}
+fetch('data.json').then(r=>r.json()).then(db=>{window.db=db;render()});
+function render(){p.textContent=db.pesoAtual;m.textContent=db.metaPeso;t.innerHTML='';db.historico.forEach(r=>t.innerHTML+=`<tr><td>${r.data}</td><td>${r.peso??'-'}</td><td>${r.ldl??'-'}</td><td>${r.hdl??'-'}</td><td>${r.total??'-'}</td><td>${r.glicose??'-'}</td><td>${r.hba1c??'-'}</td></tr>`)}
+function add(){db.historico.push({data:d.value,peso:+w.value||null,ldl:+l.value||null,hdl:+h.value||null,total:+tc.value||null,glicose:+g.value||null,hba1c:+a.value||null});db.historico.sort((x,y)=>x.data.localeCompare(y.data));render();alert('Registro salvo neste dispositivo. Depois exportaremos sincronização.')}
 </script></body></html>
