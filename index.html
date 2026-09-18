@@ -1,16 +1,88 @@
+
 <!doctype html><html lang='pt-br'><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>
-<title>Minha Saúde</title><link rel='manifest' href='manifest.json'><style>
-body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#efefef;margin:0}
-header{background:#1f766e;color:#fff;padding:28px} .card{background:#fff;margin:18px;border-radius:18px;padding:18px}
-table{width:100%;border-collapse:collapse}th,td{padding:8px;border-bottom:1px solid #ddd;text-align:left}
-input{width:100%;padding:12px;margin:6px 0;border:1px solid #ccc;border-radius:10px}
-button{background:#1f766e;color:#fff;border:none;padding:12px 18px;border-radius:12px}
-</style><body><header><h1>Minha Saúde</h1><p>Histórico de exames • Flávia</p></header>
-<div class='card'><h2>Resumo</h2><p>Peso atual: <b id=p></b> kg • Meta: <b id=m></b> kg</p></div>
-<div class='card'><h2>Linha do tempo</h2><table><thead><tr><th>Data</th><th>Peso</th><th>LDL</th><th>HDL</th><th>Total</th><th>Glicose</th><th>HbA1c</th></tr></thead><tbody id=t></tbody></table></div>
-<div class='card'><h2>Novo registro</h2><input id=d placeholder='AAAA-MM'><input id=w placeholder='Peso'><input id=l placeholder='LDL'><input id=h placeholder='HDL'><input id=tc placeholder='Total'><input id=g placeholder='Glicose'><input id=a placeholder='HbA1c'><button onclick='add()'>Salvar</button></div>
+<title>Minha Saúde Final</title><link rel='manifest' href='manifest.json'>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;margin:0;background:#eef2f1}
+header{background:#1f766e;color:#fff;padding:26px}
+.card{background:#fff;margin:16px;border-radius:18px;padding:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.metric{background:#f5f5f5;border-radius:14px;padding:12px;text-align:center}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:8px;border-bottom:1px solid #ddd;text-align:left}
+svg{width:100%;height:180px}button{background:#1f766e;color:#fff;border:none;padding:12px 16px;border-radius:12px}
+input{width:100%;padding:10px;margin:5px 0;border:1px solid #ccc;border-radius:10px}
+.badge{display:inline-block;background:#e7f5f3;color:#1f766e;padding:4px 8px;border-radius:999px;font-size:12px}
+</style><body>
+<header><h1>Minha Saúde</h1><p>Prontuário pessoal • Flávia</p></header>
+
+<div class=card><h2>Resumo</h2><div class=grid id=metrics></div></div>
+
+<div class=card><h2>📈 Evolução do Peso</h2><svg id=gp></svg></div>
+<div class=card><h2>❤️ LDL x HDL</h2><svg id=gc></svg></div>
+<div class=card><h2>🩸 Glicose</h2><svg id=gg></svg></div>
+
+<div class=card><h2>Linha do tempo</h2><div id=timeline></div></div>
+
+<div class=card><h2>Histórico de exames</h2>
+<table><thead><tr><th>Data</th><th>Peso</th><th>LDL</th><th>HDL</th><th>Total</th><th>Glicose</th><th>HbA1c</th></tr></thead><tbody id=tb></tbody></table>
+</div>
+
+<div class=card><h2>Medicamentos</h2><ul id=med></ul></div>
+
+<div class=card><h2>Bioimpedância</h2><p><span class=badge>Agosto/2026</span></p><p>Esta seção está pronta para armazenar gordura corporal, massa magra, músculo, água corporal e gordura visceral nas próximas medições.</p></div>
+
+<div class=card><h2>Novo registro</h2>
+<input id=d placeholder="AAAA-MM"><input id=w placeholder="Peso"><input id=l placeholder="LDL"><input id=h placeholder="HDL"><input id=t placeholder="Colesterol Total"><input id=g placeholder="Glicose"><input id=a placeholder="HbA1c">
+<button onclick="add()">Salvar neste aparelho</button>
+</div>
+
+<div class=card><h2>Backup</h2>
+<p>Exporte seu histórico em JSON para guardar ou compartilhar.</p>
+<button onclick="backup()">Exportar Backup</button>
+</div>
+
 <script>
-fetch('data.json').then(r=>r.json()).then(db=>{window.db=db;render()});
-function render(){p.textContent=db.pesoAtual;m.textContent=db.metaPeso;t.innerHTML='';db.historico.forEach(r=>t.innerHTML+=`<tr><td>${r.data}</td><td>${r.peso??'-'}</td><td>${r.ldl??'-'}</td><td>${r.hdl??'-'}</td><td>${r.total??'-'}</td><td>${r.glicose??'-'}</td><td>${r.hba1c??'-'}</td></tr>`)}
-function add(){db.historico.push({data:d.value,peso:+w.value||null,ldl:+l.value||null,hdl:+h.value||null,total:+tc.value||null,glicose:+g.value||null,hba1c:+a.value||null});db.historico.sort((x,y)=>x.data.localeCompare(y.data));render();alert('Registro salvo neste dispositivo. Depois exportaremos sincronização.')}
+fetch('data.json').then(r=>r.json()).then(db=>{
+ const local=localStorage.getItem('minhasaude');
+ if(local){try{db=JSON.parse(local)}catch(e){}}
+ window.db=db;render();
+});
+function render(){
+metrics.innerHTML=`
+<div class=metric><b>${db.perfil.pesoAtual} kg</b><br>Peso atual</div>
+<div class=metric><b>${db.perfil.metaPeso} kg</b><br>Meta</div>
+<div class=metric><b>${db.perfil.pesoIdealMedico} kg</b><br>Ideal médico</div>
+<div class=metric><b>${db.perfil.altura} m</b><br>Altura</div>`;
+tb.innerHTML=''; timeline.innerHTML=''; med.innerHTML='';
+db.historico.forEach(r=>{
+ tb.innerHTML+=`<tr><td>${r.data}</td><td>${r.peso??'-'}</td><td>${r.ldl??'-'}</td><td>${r.hdl??'-'}</td><td>${r.total??'-'}</td><td>${r.glicose??'-'}</td><td>${r.hba1c??'-'}</td></tr>`;
+ if(r.evento) timeline.innerHTML+=`<p><b>${r.data}</b> — ${r.evento}</p>`;
+});
+db.medicamentos.forEach(m=>med.innerHTML+=`<li>${m.nome} — ${m.status}</li>`);
+line('gp',db.historico.filter(x=>x.peso),'peso','#1f766e');
+dual('gc',db.historico.filter(x=>x.ldl||x.hdl),'ldl','hdl','#c0392b','#2563eb');
+line('gg',db.historico.filter(x=>x.glicose),'glicose','#8e44ad');
+localStorage.setItem('minhasaude',JSON.stringify(db));
+}
+function line(id,a,k,c){
+ const s=document.getElementById(id),W=340,H=180,m=22;s.setAttribute('viewBox',`0 0 ${W} ${H}`);if(a.length<2)return;
+ const v=a.map(x=>x[k]),mn=Math.min(...v)-5,mx=Math.max(...v)+5;let p='';
+ a.forEach((r,i)=>{const x=m+i*(W-2*m)/(a.length-1),y=H-m-(r[k]-mn)*(H-2*m)/(mx-mn);p+=(i?'L':'M')+x+' '+y;});
+ s.innerHTML=`<path d="${p}" fill="none" stroke="${c}" stroke-width="3"/>`;
+}
+function dual(id,a,k1,k2,c1,c2){
+ const s=document.getElementById(id),W=340,H=180,m=22;s.setAttribute('viewBox',`0 0 ${W} ${H}`);if(a.length<2)return;
+ const vals=a.flatMap(x=>[x[k1],x[k2]].filter(Boolean)),mn=Math.min(...vals)-5,mx=Math.max(...vals)+5;let p1='',p2='';
+ a.forEach((r,i)=>{const x=m+i*(W-2*m)/(a.length-1);
+ if(r[k1]){const y=H-m-(r[k1]-mn)*(H-2*m)/(mx-mn);p1+=(p1?'L':'M')+x+' '+y;}
+ if(r[k2]){const y=H-m-(r[k2]-mn)*(H-2*m)/(mx-mn);p2+=(p2?'L':'M')+x+' '+y;}});
+ s.innerHTML=`<path d="${p1}" fill="none" stroke="${c1}" stroke-width="3"/><path d="${p2}" fill="none" stroke="${c2}" stroke-width="3"/>`;
+}
+function add(){
+ db.historico.push({data:d.value,peso:+w.value||null,ldl:+l.value||null,hdl:+h.value||null,total:+t.value||null,glicose:+g.value||null,hba1c:+a.value||null});
+ db.historico.sort((a,b)=>a.data.localeCompare(b.data)); render(); alert('Registro salvo.');
+}
+function backup(){
+ const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='MinhaSaude_Backup.json';a.click();
+}
 </script></body></html>
