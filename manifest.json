@@ -1,0 +1,15 @@
+{
+  "name": "Minha Sa\u00fade",
+  "short_name": "Sa\u00fade",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0f766e",
+  "theme_color": "#0f766e",
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
