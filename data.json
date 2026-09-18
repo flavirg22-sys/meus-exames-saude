@@ -1,46 +1,32 @@
-[
-  {
-    "date": "2016-06",
-    "weight": 73.4,
-    "ldl": 150,
-    "hdl": 43,
-    "total": 215,
-    "tg": 109,
-    "hba1c": 5.1,
-    "glucose": 99
-  },
-  {
-    "date": "2017-07",
-    "weight": null,
-    "ldl": 136,
-    "hdl": 40,
-    "total": 199,
-    "tg": 119,
-    "hba1c": 5.2,
-    "glucose": 97
-  },
-  {
-    "date": "2019-08",
-    "weight": null,
-    "ldl": 154,
-    "total": 221,
-    "tg": 114,
-    "vitd": 28.6,
-    "b12": 720,
-    "insulin": 20.2,
-    "glucose": 97
-  },
-  {
-    "date": "2023",
-    "weight": 78
-  },
-  {
-    "date": "2026-01",
-    "weight": 74
-  },
-  {
-    "date": "2026-08",
-    "weight": 58.5,
-    "goal": 53
-  }
-]
+{
+  "history": [
+    {
+      "date": "2016-06",
+      "weight": 73.4,
+      "ldl": 150,
+      "total": 215
+    },
+    {
+      "date": "2017-07",
+      "ldl": 136,
+      "total": 199
+    },
+    {
+      "date": "2019-08",
+      "ldl": 154,
+      "total": 221
+    },
+    {
+      "date": "2023",
+      "weight": 78
+    },
+    {
+      "date": "2026-01",
+      "weight": 74
+    },
+    {
+      "date": "2026-08",
+      "weight": 58.5
+    }
+  ]
+}

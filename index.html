@@ -1,22 +1,25 @@
-<!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>
+<!doctype html><html lang='pt-BR'><head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width,initial-scale=1'>
 <title>Minha Saúde</title>
 <link rel='manifest' href='manifest.json'>
 <style>
-body{font-family:-apple-system,Arial;background:#f6f7f9;margin:0}header{background:#0f766e;color:#fff;padding:22px}
-.card{background:#fff;margin:14px;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#f4f4f4;margin:0}
+header{background:#246b63;color:#fff;padding:24px}
+.card{background:#fff;margin:16px;border-radius:18px;padding:18px}
 table{width:100%;border-collapse:collapse}td,th{padding:8px;border-bottom:1px solid #eee;text-align:left}
-button{background:#0f766e;color:#fff;border:0;border-radius:10px;padding:12px 16px}
+button{background:#246b63;color:#fff;border:0;border-radius:10px;padding:10px 14px}
 input{width:100%;padding:10px;margin:6px 0}
 </style></head><body>
-<header><h2>Minha Saúde</h2><div>Histórico de exames • Flávia</div></header>
-<div class='card'><h3>Resumo</h3><div>Peso atual: <b>58,5 kg</b> • Meta: <b>53 kg</b></div></div>
-<div class='card'><h3>Linha do tempo</h3><table id=t></table></div>
-<div class='card'><h3>Novo registro</h3>
-<input id=d placeholder='Data (2026-09)'><input id=p placeholder='Peso (kg)'><button onclick='add()'>Salvar</button></div>
+<header><h1>Minha Saúde</h1><p>Histórico de exames • Flávia</p></header>
+<div class='card'><h2>Resumo</h2><p><b>Peso atual:</b> 58,5 kg • <b>Meta:</b> 53 kg</p></div>
+<div class='card'><h2>Linha do tempo</h2><table id=t></table></div>
+<div class='card'><h2>Novo registro</h2>
+<input id=d placeholder='AAAA-MM'><input id=p type=number placeholder='Peso'>
+<input id=l type=number placeholder='LDL'><input id=c type=number placeholder='Colesterol Total'>
+<button onclick='add()'>Salvar</button></div>
 <script>
-let data=[];fetch('data.json').then(r=>r.json()).then(j=>{data=j;render()});
-function render(){let h='<tr><th>Data</th><th>Peso</th><th>LDL</th><th>Total</th></tr>';data.forEach(x=>h+=`<tr><td>${x.date}</td><td>${x.weight??'-'}</td><td>${x.ldl??'-'}</td><td>${x.total??'-'}</td></tr>`);t.innerHTML=h}
-function add(){data.push({date:d.value,weight:parseFloat(p.value)});localStorage.setItem('extra',JSON.stringify(data.slice(6)));render()}
-const e=JSON.parse(localStorage.getItem('extra')||'[]'); if(e.length){data=data.concat(e);}
-if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js')}
+let data=[{d:"2016-06",p:73.4,l:150,c:215},{d:"2017-07",p:null,l:136,c:199},{d:"2019-08",p:null,l:154,c:221},{d:"2023",p:78,l:null,c:null},{d:"2026-01",p:74,l:null,c:null},{d:"2026-08",p:58.5,l:null,c:null}];
+function render(){let h="<tr><th>Data</th><th>Peso</th><th>LDL</th><th>Total</th></tr>";data.forEach(r=>h+=`<tr><td>${r.d}</td><td>${r.p??"-"}</td><td>${r.l??"-"}</td><td>${r.c??"-"}</td></tr>`);t.innerHTML=h;}
+function add(){data.push({d:d.value,p:p.value?+p.value:null,l:l.value?+l.value:null,c:c.value?+c.value:null});render();d.value=p.value=l.value=c.value="";}
+render();if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}
 </script></body></html>
